@@ -2,77 +2,85 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Contact;
-use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreContactRequest;
+use App\Http\Requests\UpdateContactRequest;
 
 class ContactController extends Controller
 {
-    public function store(Request $request)
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
     {
-        // Validasi data yang masuk
-        $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => 'required|email',
-            'phone' => 'required'
-        ]);
-
-        // Simpan data kontak baru
-        $contact = new Contact();
-        $contact->first_name = $request->first_name;
-        $contact->last_name = $request->last_name;
-        $contact->email = $request->email;
-        $contact->phone = $request->phone;
-        $contact->save();
-
-        return response()->setJSON(['message' => 'Contact created successfully']);
+        //
     }
 
-    public function update(Request $request, $id)
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
     {
-        // Temukan kontak berdasarkan ID
-        $contact = Contact::findOrFail($id);
-
-        // Validasi data yang masuk
-        $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => 'required|email',
-            'phone' => 'required'
-        ]);
-
-        // Update data kontak
-        $contact->update($request->all());
-
-        return response()->setJSON(['message' => 'Contact updated successfully']);
+        //
     }
 
-    public function show($id)
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \App\Http\Requests\StoreContactRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(StoreContactRequest $request)
     {
-        // Temukan kontak berdasarkan ID
-        $contact = Contact::findOrFail($id);
-
-        return response()->setJSON($contact);
+        //
     }
 
-    public function search(Request $request)
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Contact  $contact
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Contact $contact)
     {
-        // Cari kontak berdasarkan kriteria tertentu
-        $contacts = Contact::where('first_name', 'like', '%' . $request->search . '%')
-                            ->orWhere('last_name', 'like', '%' . $request->search . '%')
-                            ->orWhere('email', 'like', '%' . $request->search . '%')
-                            ->orWhere('phone', 'like', '%' . $request->search . '%')
-                            ->get();
-
-        return response()->setJSON($contacts);
+        //
     }
 
-    public function destroy($id)
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\Contact  $contact
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Contact $contact)
     {
-        // Hapus kontak berdasarkan ID
-        Contact::findOrFail($id)->delete();
+        //
+    }
 
-        return response()->setJSON(['message' => 'Contact deleted successfully']);
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \App\Http\Requests\UpdateContactRequest  $request
+     * @param  \App\Models\Contact  $contact
+     * @return \Illuminate\Http\Response
+     */
+    public function update(UpdateContactRequest $request, Contact $contact)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Contact  $contact
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Contact $contact)
+    {
+        //
     }
 }

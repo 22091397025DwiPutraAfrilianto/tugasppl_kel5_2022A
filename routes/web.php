@@ -1,45 +1,42 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ContactController;
-use App\Http\Controllers\AddressController;
-use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\DashboardPostController;
+use App\Http\Controllers\DashboardUserController;
+use App\Http\Controllers\DashboardAddressController;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
-// Rute untuk registrasi dan login
-Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-Route::post('/register', [RegisterController::class, 'register']);
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
 
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login']);
-
-// Rute untuk User
-Route::middleware('auth')->group(function () {
-    Route::post('/update-user', [UserController::class, 'update']);
-    Route::get('/get-user', [UserController::class, 'getUser']);
-    Route::post('/logout', [UserController::class, 'logout']);
-});
-
-// Rute untuk Contact
-Route::middleware('auth')->group(function () {
-    Route::post('/create-contact', [ContactController::class, 'create']);
-    Route::post('/update-contact', [ContactController::class, 'update']);
-    Route::get('/get-contact/{id}', [ContactController::class, 'get']);
-    Route::get('/search-contact', [ContactController::class, 'search']);
-    Route::post('/remove-contact', [ContactController::class, 'remove']);
-});
-
-// Rute untuk Address
-Route::middleware('auth')->group(function () {
-    Route::post('/create-address', [AddressController::class, 'create']);
-    Route::post('/update-address', [AddressController::class, 'update']);
-    Route::get('/get-address/{id}', [AddressController::class, 'get']);
-    Route::get('/list-address', [AddressController::class, 'list']);
-    Route::post('/remove-address', [AddressController::class, 'remove']);
-});
-
-// Route untuk halaman landing
 Route::get('/', function () {
-    return view('landing');
-})->name('landing');
+    return view('home', [
+        "page" => "Home"
+    ]);
+});
+
+Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
+Route::post('/login', [LoginController::class, 'authenticate']);
+Route::post('/logout', [LoginController::class, 'logout']);
+
+Route::get('/register', [RegisterController::class, 'index'])->middleware('guest');
+Route::post('/register', [RegisterController::class, 'store']);
+
+Route::get('/dashboard', function(){
+    return view('dashboard.index');
+})->middleware('auth');
+
+Route::resource('/dashboard/contact', DashboardPostController::class)->middleware('auth');
+Route::resource('/dashboard/address', DashboardAddressController::class)->middleware('auth');
+Route::resource('/dashboard/user', DashboardUserController::class)->middleware('auth');
